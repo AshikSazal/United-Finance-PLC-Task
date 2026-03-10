@@ -118,7 +118,7 @@ CREATE TABLE Loans (
 ## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/LoanApprovalSystem.git
+git clone https://github.com/AshikSazal/United-Finance-PLC-Task.git
 ```
 
 ---

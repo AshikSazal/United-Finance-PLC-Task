@@ -16,6 +16,8 @@ namespace Loan_Procedure.Services
 
         public Response CreateLoan(Loan loan)
         {
+            if (loan.Amount <= 0)
+                return Response.Fail("Loan amount must be greater than zero.");
             return _loanRepository.CreateLoan(loan);
         }
         public List<LoanResponseDto> GetLoans(int? status, int? customerId)

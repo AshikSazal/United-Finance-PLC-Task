@@ -6,7 +6,6 @@
 
 <h2>Add Customer</h2>
 
-<!-- Top-right toast for service/repository errors -->
 @if (ViewData.ModelState != null && ViewData.ModelState[string.Empty]?.Errors.Count > 0)
 {
     var errorMessage = ViewData.ModelState[string.Empty]?.Errors.First().ErrorMessage;

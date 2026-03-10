@@ -147,45 +147,52 @@ Update `appsettings.json`:
 LoanProcedure
 │
 ├── Controllers
-│    ├── CustomerController.cs
-│    └── LoanController.cs
+│   ├── CustomerController.cs
+│   └── LoanController.cs
 │
 ├── Models
-│    ├── Customer.cs
-│    └── Loan.cs
+│   ├── Customer.cs
+│   └── Loan.cs
 │
 ├── DTOs
-│    ├── Customer
-│    │     ├── CustomerCreateDto.cs
-│    │     ├── CustomerUpdateDto.cs
-│    │     └── CustomerResponseDto.cs
-│    │
-│    └── Loan
-│          ├── LoanCreateDto.cs
-│          ├── LoanUpdateDto.cs
-│          └── LoanResponseDto.cs
+│   ├── Customer
+│   │    └── CustomerResponseDto.cs
+│   │
+│   └── Loan
+│        └── LoanResponseDto.cs
 │
 ├── DbHelper
-│    └── DbConnection.cs
+│   └── DbConnection.cs
 │
 ├── Repositories
-│    ├── Interfaces
-│    │     ├── ICustomerRepository.cs
-│    │     └── ILoanRepository.cs
-│    │
-│    ├── CustomerRepository.cs
-│    └── LoanRepository.cs
+│   ├── Interfaces
+│   │    ├── ICustomerRepository.cs
+│   │    └── ILoanRepository.cs
+│   │
+│   ├── CustomerRepository.cs
+│   └── LoanRepository.cs
 │
 ├── Services
-│    ├── CustomerService.cs
-│    └── LoanService.cs
+│   ├── CustomerService.cs
+│   └── LoanService.cs
 │
 ├── Views
-│    ├── Customer
-│    ├── Loan
-│    └── Shared
+│   ├── Customer
+│   │    ├── Create.cshtml
+│   │    ├── Edit.cshtml
+│   │    └── Index.cshtml
+│   │
+│   └── Loan
+│        ├── Create.cshtml
+│        ├── Edit.cshtml
+│        └── Index.cshtml
 │
 ├── wwwroot
+│
+├── Utils
+│   ├── Constants
+│   │    └── LoanStatus.cs
+│   └── Response.cs
 │
 ├── appsettings.json
 └── Program.cs

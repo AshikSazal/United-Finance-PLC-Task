@@ -1,31 +1,48 @@
 ﻿@model List<Loan_Procedure.DTOs.Loan.LoanResponseDto>
-@using Loan_Procedure.Utils.Constants;
+@using Loan_Procedure.Utils.Constants
 
 @{
     ViewData["Title"] = "Loans";
+
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int totalRecords = ViewBag.TotalRecords ?? 0;
+    int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+    int sl = (currentPage - 1) * pageSize + 1;
+
+    var queryCustomerId = ViewContext.HttpContext.Request.Query["customerId"].ToString();
+    var queryStatus = ViewContext.HttpContext.Request.Query["status"].ToString();
+    var queryPageSize = ViewContext.HttpContext.Request.Query["pageSize"].ToString();
 }
 
 <h2>Loan List</h2>
 
+<!-- Filters + Page Size -->
 <form method="get" class="row g-3 mb-3 align-items-end">
-    <div class="col-md-6">
+    <div class="col-md-3">
         <label class="form-label">Customer</label>
         <select name="customerId" class="form-select" asp-items="ViewBag.Customers">
-            <option value="">-- Select Customer --</option>
+            <option value="">-- All Customers --</option>
         </select>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <label class="form-label">Status</label>
-        <select name="status" class="form-select" asp-items="ViewBag.Statuses"></select>
+        <select name="status" class="form-select" asp-items="ViewBag.Statuses">
+            <option value="">-- All Status --</option>
+        </select>
     </div>
 
-    <div class="col-md-2">
-        <button type="submit" class="btn btn-primary">Filter</button>
+    <div class="col-md-3">
+        <label class="form-label">Rows per page</label>
+        <select name="pageSize" class="form-select" asp-items="ViewBag.PageSizes" onchange="this.form.submit()"></select>
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary me-2">Filter</button>
         <a asp-action="Create" class="btn btn-success">Add Loan</a>
     </div>
 </form>
-
 
 @if (Model == null || !Model.Any())
 {
@@ -49,9 +66,6 @@ else
             </tr>
         </thead>
         <tbody>
-            @{
-                int sl = 1;
-            }
             @foreach (var loan in Model)
             {
                 <tr>
@@ -81,4 +95,33 @@ else
             }
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center mt-3">
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)"
+                   asp-route-customerId="@queryCustomerId" asp-route-status="@queryStatus" asp-route-pageSize="@queryPageSize">
+                    Previous
+                </a>
+            </li>
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(currentPage == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i"
+                       asp-route-customerId="@queryCustomerId" asp-route-status="@queryStatus" asp-route-pageSize="@queryPageSize">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)"
+                   asp-route-customerId="@queryCustomerId" asp-route-status="@queryStatus" asp-route-pageSize="@queryPageSize">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
 }

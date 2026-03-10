@@ -1,4 +1,5 @@
-﻿using Loan_Procedure.DTOs.Customer;
+﻿using Loan_Procedure.DTOs;
+using Loan_Procedure.DTOs.Customer;
 using Loan_Procedure.Models;
 using Loan_Procedure.Repositories.Interfaces;
 using Loan_Procedure.Utils;
@@ -24,6 +25,10 @@ namespace Loan_Procedure.Services
         public List<CustomerResponseDto> GetCustomers()
         {
             return _customerRepository.GetCustomers();
+        }
+        public PagedResult<CustomerResponseDto> GetCustomers(int page = 1, int pageSize = 10)
+        {
+            return _customerRepository.GetCustomers(page, pageSize);
         }
         public Response UpdateCustomer(Customer customer)
         {

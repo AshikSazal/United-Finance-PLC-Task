@@ -1,9 +1,10 @@
 ﻿using Loan_Procedure.DbHelper;
+using Loan_Procedure.DTOs;
 using Loan_Procedure.DTOs.Customer;
 using Loan_Procedure.Models;
 using Loan_Procedure.Repositories.Interfaces;
-using Microsoft.Data.SqlClient;
 using Loan_Procedure.Utils;
+using Microsoft.Data.SqlClient;
 
 namespace Loan_Procedure.Repositories
 {
@@ -44,7 +45,6 @@ namespace Loan_Procedure.Repositories
                 return Response.Fail("Something Went Wrong!!!");
             }
         }
-
         public List<CustomerResponseDto> GetCustomers()
         {
             List<CustomerResponseDto> list = new();
@@ -78,6 +78,51 @@ namespace Loan_Procedure.Repositories
 
             return list;
         }
+
+        public PagedResult<CustomerResponseDto> GetCustomers(int page = 1, int pageSize = 10)
+        {
+            var result = new PagedResult<CustomerResponseDto>();
+
+            try
+            {
+                using var con = _dbConnection.CreateConnection();
+
+                string query = @"
+            SELECT COUNT(*) OVER() AS TotalRecords, *
+            FROM Customers
+            ORDER BY Name
+            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+        ";
+
+                using SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@Offset", (page - 1) * pageSize);
+                cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+                con.Open();
+
+                using SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    result.TotalRecords = Convert.ToInt32(reader["TotalRecords"]);
+                    result.Items.Add(new CustomerResponseDto
+                    {
+                        CustomerId = Convert.ToInt32(reader["CustomerId"]),
+                        Name = reader["Name"]?.ToString() ?? string.Empty,
+                        NID = reader["NID"]?.ToString() ?? string.Empty,
+                        Mobile = reader["Mobile"]?.ToString() ?? string.Empty,
+                        Income = reader["Income"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["Income"])
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while retrieving customers.", ex);
+            }
+
+            return result;
+        }
+
         public Response UpdateCustomer(Customer customer)
         {
             try

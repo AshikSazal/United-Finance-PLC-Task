@@ -19,7 +19,7 @@ namespace Loan_Procedure.Controllers
             _customerService = customerService;
         }
 
-        public IActionResult Index(int? status, int? customerId)
+        public IActionResult Index(int? status, int? customerId, int page = 1, int pageSize = 5)
         {
             List<CustomerResponseDto> customers = _customerService.GetCustomers();
             ViewBag.Customers = new SelectList(customers, "CustomerId", "Name", customerId);
@@ -27,9 +27,24 @@ namespace Loan_Procedure.Controllers
             var statusList = LoanStatusList.Status;
             ViewBag.Statuses = new SelectList(statusList, "Value", "Text", status);
 
-            var loans = _service.GetLoans(status, customerId);
-            return View(loans);
+            var pagedLoans = _service.GetLoans(status, customerId, page, pageSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalRecords = pagedLoans.TotalRecords;
+
+
+            ViewBag.PageSizes = new List<SelectListItem>
+            {
+                new () { Text = "5", Value = "5", Selected = (pageSize == 5) },
+                new () { Text = "10", Value = "10", Selected = (pageSize == 10) },
+                new () { Text = "15", Value = "15", Selected = (pageSize == 15) },
+                new () { Text = "20", Value = "20", Selected = (pageSize == 20) }
+            };
+
+            return View(pagedLoans.Items);
         }
+
 
         public IActionResult Create()
         {

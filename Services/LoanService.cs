@@ -1,4 +1,5 @@
-﻿using Loan_Procedure.DTOs.Loan;
+﻿using Loan_Procedure.DTOs;
+using Loan_Procedure.DTOs.Loan;
 using Loan_Procedure.Models;
 using Loan_Procedure.Repositories.Interfaces;
 using Loan_Procedure.Utils;
@@ -20,9 +21,9 @@ namespace Loan_Procedure.Services
                 return Response.Fail("Loan amount must be greater than zero.");
             return _loanRepository.CreateLoan(loan);
         }
-        public List<LoanResponseDto> GetLoans(int? status, int? customerId)
+        public PagedResult<LoanResponseDto> GetLoans(int? status, int? customerId, int page = 1, int pageSize = 10)
         {
-            return _loanRepository.GetLoans(status, customerId);
+            return _loanRepository.GetLoans(status, customerId, page, pageSize);
         }
 
         public Response UpdateStatus(int loanId, int status)

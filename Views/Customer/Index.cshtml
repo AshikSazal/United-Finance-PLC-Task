@@ -2,11 +2,28 @@
 
 @{
     ViewData["Title"] = "Customers";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int totalRecords = ViewBag.TotalRecords ?? 0;
+    int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+    int sl = (currentPage - 1) * pageSize + 1;
 }
 
 <h2>Customers</h2>
+<div class="row mb-3 align-items-end">
+    <!-- Page Size Dropdown -->
+    <div class="col-md-3">
+        <form method="get">
+            <label class="form-label">Rows per page</label>
+            <select name="pageSize" class="form-select" asp-items="ViewBag.PageSizes" onchange="this.form.submit()"></select>
+        </form>
+    </div>
 
-<a asp-action="Create" class="btn btn-primary mb-3">Add Customer</a>
+    <!-- Add Customer Button (right-aligned) -->
+    <div class="col-md-9 d-flex justify-content-end">
+        <a asp-action="Create" class="btn btn-primary">Add Customer</a>
+    </div>
+</div>
 @if (Model == null || !Model.Any())
 {
     <div class="alert alert-warning">
@@ -27,9 +44,6 @@ else
             </tr>
         </thead>
         <tbody>
-            @{
-                int sl = 1;
-            }
             @foreach (var customer in Model)
             {
                 <tr>
@@ -45,4 +59,27 @@ else
             }
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center mt-3">
+            <!-- Previous button -->
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" asp-route-pageSize="@pageSize">Previous</a>
+            </li>
+
+            <!-- Page numbers -->
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(currentPage == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-pageSize="@pageSize">@i</a>
+                </li>
+            }
+
+            <!-- Next button -->
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-pageSize="@pageSize">Next</a>
+            </li>
+        </ul>
+    </nav>
 }

@@ -1,7 +1,10 @@
-﻿using Loan_Procedure.Models;
+﻿using Loan_Procedure.DTOs;
+using Loan_Procedure.DTOs.Customer;
+using Loan_Procedure.Models;
 using Loan_Procedure.Services;
-using Microsoft.AspNetCore.Mvc;
 using Loan_Procedure.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Loan_Procedure.Controllers
 {
@@ -15,10 +18,21 @@ namespace Loan_Procedure.Controllers
         }
 
         // GET: /Customer
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int pageSize = 5)
         {
-            var customers = _service.GetCustomers();
-            return View(customers);
+            PagedResult<CustomerResponseDto> customers = _service.GetCustomers(page, pageSize);
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalRecords = customers.TotalRecords;
+
+            ViewBag.PageSizes = new List<SelectListItem>
+            {
+                new () { Text = "5", Value = "5", Selected = (pageSize == 5) },
+                new () { Text = "10", Value = "10", Selected = (pageSize == 10) },
+                new () { Text = "15", Value = "15", Selected = (pageSize == 15) },
+                new () { Text = "20", Value = "20", Selected = (pageSize == 20) }
+            };
+            return View(customers.Items);
         }
 
         // GET: /Customer/Create

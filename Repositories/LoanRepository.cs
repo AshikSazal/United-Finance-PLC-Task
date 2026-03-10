@@ -1,4 +1,5 @@
 ﻿using Loan_Procedure.DbHelper;
+using Loan_Procedure.DTOs;
 using Loan_Procedure.DTOs.Loan;
 using Loan_Procedure.Models;
 using Loan_Procedure.Repositories.Interfaces;
@@ -44,51 +45,55 @@ namespace Loan_Procedure.Repositories
             }
         }
 
-        public List<LoanResponseDto> GetLoans(int? status, int? customerId)
+        public PagedResult<LoanResponseDto> GetLoans(int? status, int? customerId, int page = 1, int pageSize = 10)
         {
-            List<LoanResponseDto> list = new();
-
             try
             {
+                var result = new PagedResult<LoanResponseDto>();
+
                 using var con = _dbConnection.CreateConnection();
+                string query = @"
+        SELECT COUNT(*) OVER() AS TotalRecords, l.*, c.Name AS CustomerName
+        FROM Loans l
+        INNER JOIN Customers c ON l.CustomerId = c.CustomerId
+        WHERE (@Status IS NULL OR l.Status = @Status)
+        AND (@CustomerId IS NULL OR l.CustomerId = @CustomerId)
+        ORDER BY l.CreatedDate DESC
+        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+    ";
 
-                string query = @"SELECT l.*, c.Name AS CustomerName
-                        FROM Loans l
-                        INNER JOIN Customers c ON l.CustomerId = c.CustomerId
-                        WHERE (@Status IS NULL OR l.Status = @Status)
-                        AND (@CustomerId IS NULL OR l.CustomerId = @CustomerId)";
-
-                using SqlCommand cmd = new SqlCommand(query, con);
-
-                cmd.Parameters.AddWithValue("@Status", status.HasValue ? status.Value : (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@CustomerId", customerId.HasValue ? customerId.Value : (object)DBNull.Value);
+                using var cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@Status", status ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@CustomerId", customerId ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Offset", (page - 1) * pageSize);
+                cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
                 con.Open();
-
-                using SqlDataReader reader = cmd.ExecuteReader();
+                using var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    list.Add(new LoanResponseDto
+                    result.TotalRecords = Convert.ToInt32(reader["TotalRecords"]); // same for all rows
+                    result.Items.Add(new LoanResponseDto
                     {
                         LoanId = Convert.ToInt32(reader["LoanId"]),
                         CustomerId = Convert.ToInt32(reader["CustomerId"]),
-                        CustomerName = reader["CustomerName"] == DBNull.Value ? string.Empty : Convert.ToString(reader["CustomerName"])!,
+                        CustomerName = reader["CustomerName"]?.ToString() ?? string.Empty,
                         Amount = Convert.ToDecimal(reader["Amount"]),
-                        LoanType = reader["LoanType"] == DBNull.Value ? string.Empty : reader["LoanType"]?.ToString() ?? string.Empty,
+                        LoanType = reader["LoanType"]?.ToString() ?? string.Empty,
                         Tenor = Convert.ToInt32(reader["Tenor"]),
                         Status = Convert.ToByte(reader["Status"]),
                         CreatedDate = Convert.ToDateTime(reader["CreatedDate"])
                     });
                 }
+                return result;
             }
             catch (Exception ex)
             {
                 throw new Exception("Error occurred while retrieving loans.", ex);
             }
-
-            return list;
         }
+
         public Response UpdateLoan(Loan loan)
         {
             try

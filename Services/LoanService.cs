@@ -1,0 +1,39 @@
+﻿using Loan_Procedure.DTOs.Loan;
+using Loan_Procedure.Models;
+using Loan_Procedure.Repositories.Interfaces;
+using Loan_Procedure.Utils;
+
+namespace Loan_Procedure.Services
+{
+    public class LoanService
+    {
+        private readonly ILoanRepository _loanRepository;
+
+        public LoanService(ILoanRepository repo)
+        {
+            _loanRepository = repo;
+        }
+
+        public Response CreateLoan(Loan loan)
+        {
+            return _loanRepository.CreateLoan(loan);
+        }
+        public List<LoanResponseDto> GetLoans(int? status, int? customerId)
+        {
+            return _loanRepository.GetLoans(status, customerId);
+        }
+
+        public Response UpdateStatus(int loanId, int status)
+        {
+            return _loanRepository.UpdateStatus(loanId, status);
+        }
+        public Loan GetLoan(int id)
+        {
+            return _loanRepository.GetLoan(id);
+        }
+        public Response UpdateLoan(Loan loan)
+        {
+            return _loanRepository.UpdateLoan(loan);
+        }
+    }
+}

@@ -1,0 +1,49 @@
+﻿@model List<Loan_Procedure.DTOs.Customer.CustomerResponseDto>
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<h2>Customers</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Add Customer</a>
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning">
+        Customer not found
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered table-responsive">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center">SL</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">NID</th>
+                <th class="text-center">Mobile</th>
+                <th class="text-center">Monthly Income</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int sl = 1;
+            }
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td class="text-center">@(sl++)</td>
+                    <td>@customer.Name</td>
+                    <td>@customer.NID</td>
+                    <td>@customer.Mobile</td>
+                    <td>@customer.Income.ToString("C")</td>
+                    <td class="text-center">
+                        <!-- Update button -->
+                        <a asp-action="Edit" asp-route-id="@customer.CustomerId" class="btn btn-sm btn-warning">Update</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

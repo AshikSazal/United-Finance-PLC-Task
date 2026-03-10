@@ -1,0 +1,73 @@
+﻿@model Loan_Procedure.Models.Loan
+@{
+    ViewData["Title"] = "Add Loan";
+}
+
+<h2>Add Loan</h2>
+
+<!-- Top-right toast for repository/service errors -->
+@if (ViewData.ModelState[string.Empty]?.Errors.Count > 0)
+{
+    var errorMessage = ViewData.ModelState[string.Empty].Errors.First().ErrorMessage;
+    <div class="position-fixed top-0 end-0 p-3" style="z-index:1080;">
+        <div class="toast align-items-center text-bg-danger border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">@errorMessage</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+}
+
+<form asp-action="Create" method="post" class="row g-3">
+    @Html.AntiForgeryToken()
+    <div class="col-md-6">
+        <label asp-for="CustomerId" class="form-label">Customer</label>
+        <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.Customers">
+            <option value="">-- Select Customer --</option>
+        </select>
+        <span asp-validation-for="CustomerId" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Amount" class="form-label"></label>
+        <input asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="LoanType" class="form-label">Loan Type</label>
+        <input asp-for="LoanType" class="form-control" />
+        <span asp-validation-for="LoanType" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Tenor" class="form-label"></label>
+        <input asp-for="Tenor" class="form-control" />
+        <span asp-validation-for="Tenor" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Purpose" class="form-label"></label>
+        <textarea asp-for="Purpose" class="form-control"></textarea>
+        <span asp-validation-for="Purpose" class="text-danger"></span>
+    </div>
+
+    <div class="col-12 mt-2">
+        <button type="submit" class="btn btn-success">Submit</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Initialize Bootstrap toast (only for service errors)
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        var toastList = toastElList.map(function(toastEl) {
+            return new bootstrap.Toast(toastEl)
+        });
+        toastList.forEach(toast => toast.show());
+    </script>
+}

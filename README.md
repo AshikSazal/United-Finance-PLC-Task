@@ -1,7 +1,7 @@
 ﻿# 1. Professional Project Structure
 
 ```
-LoanApprovalSystem
+LoanProcedure
 │
 ├── Controllers
 │    ├── CustomerController.cs

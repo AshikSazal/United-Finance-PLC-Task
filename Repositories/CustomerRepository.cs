@@ -107,7 +107,7 @@ namespace Loan_Procedure.Repositories
                 return Response.Fail("Something Went Wrong!!!");
             }
         }
-        public Customer GetCustomer(int customerId)
+        public Customer? GetCustomer(int customerId)
         {
             try
             {

@@ -8,7 +8,7 @@
 <!-- Top-right toast for repository/service errors -->
 @if (ViewData.ModelState[string.Empty]?.Errors.Count > 0)
 {
-    var errorMessage = ViewData.ModelState[string.Empty].Errors.First().ErrorMessage;
+    var errorMessage = ViewData.ModelState[string.Empty]?.Errors.First().ErrorMessage;
     <div class="position-fixed top-0 end-0 p-3" style="z-index:1080;">
         <div class="toast align-items-center text-bg-danger border-0" role="alert">
             <div class="d-flex">

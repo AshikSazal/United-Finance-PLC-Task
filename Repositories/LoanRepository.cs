@@ -73,7 +73,7 @@ namespace Loan_Procedure.Repositories
                     {
                         LoanId = Convert.ToInt32(reader["LoanId"]),
                         CustomerId = Convert.ToInt32(reader["CustomerId"]),
-                        CustomerName = Convert.ToString(reader["CustomerName"]),
+                        CustomerName = reader["CustomerName"] == DBNull.Value ? string.Empty : Convert.ToString(reader["CustomerName"])!,
                         Amount = Convert.ToDecimal(reader["Amount"]),
                         LoanType = reader["LoanType"] == DBNull.Value ? string.Empty : reader["LoanType"]?.ToString() ?? string.Empty,
                         Tenor = Convert.ToInt32(reader["Tenor"]),
@@ -102,7 +102,7 @@ namespace Loan_Procedure.Repositories
                                  Tenor=@Tenor,
                                  Purpose=@Purpose
                              WHERE LoanId=@LoanId
-                             AND Status <= 1"; // Only editable if not approved/rejected
+                             AND Status <= 1";
 
                 using SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@CustomerId", loan.CustomerId);

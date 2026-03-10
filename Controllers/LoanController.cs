@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Loan_Procedure.Utils;
 using Loan_Procedure.DTOs.Customer;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Loan_Procedure.Utils.Constants;
 
 namespace Loan_Procedure.Controllers
 {
@@ -22,19 +23,11 @@ namespace Loan_Procedure.Controllers
         {
             List<CustomerResponseDto> customers = _customerService.GetCustomers();
             ViewBag.Customers = new SelectList(customers, "CustomerId", "Name", customerId);
-            var loans = _service.GetLoans(status, customerId);
             ViewBag.SelectedStatus = status;
-            var statusList = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "", Text = "-- All Status --" },
-                new SelectListItem { Value = "0", Text = "Draft" },
-                new SelectListItem { Value = "1", Text = "Submitted" },
-                new SelectListItem { Value = "2", Text = "Approved" },
-                new SelectListItem { Value = "3", Text = "Rejected" }
-            };
-
+            var statusList = LoanStatusList.Status;
             ViewBag.Statuses = new SelectList(statusList, "Value", "Text", status);
 
+            var loans = _service.GetLoans(status, customerId);
             return View(loans);
         }
 
@@ -56,27 +49,38 @@ namespace Loan_Procedure.Controllers
                 return View(loan);
 
             Response response = _service.CreateLoan(loan);
-            if (response.Status) // success
+            if (response.Status)
             {
                 TempData["Message"] = response.Message;
                 return RedirectToAction("Index");
             }
 
-            // If there is an error, show it on the same page
             ModelState.AddModelError(string.Empty, response.Message);
             return View(loan);
         }
 
         public IActionResult Edit(int id)
         {
-            List<CustomerResponseDto> customers = _customerService.GetCustomers();
-            ViewBag.Customers = new SelectList(customers, "CustomerId", "Name");
-            var loan = _service.GetLoan(id);
+            try
+            {
+                List<CustomerResponseDto> customers = _customerService.GetCustomers();
+                ViewBag.Customers = new SelectList(customers, "CustomerId", "Name");
 
-            if (loan == null)
-                return View(null);
+                var loan = _service.GetLoan(id);
 
-            return View(loan);
+                if (loan == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Loan not found.");
+                    return View(new Loan());
+                }
+
+                return View(loan);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Error loading loan: " + ex.Message);
+                return View(new Loan());
+            }
         }
 
         [HttpPost]
@@ -103,7 +107,6 @@ namespace Loan_Procedure.Controllers
             if (response.Status)
             {
                 TempData["Message"] = response.Message;
-                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index");
@@ -114,7 +117,6 @@ namespace Loan_Procedure.Controllers
             if (response.Status)
             {
                 TempData["Message"] = response.Message;
-                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index");
@@ -125,7 +127,6 @@ namespace Loan_Procedure.Controllers
             if (response.Status)
             {
                 TempData["Message"] = response.Message;
-                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index");

@@ -1,4 +1,5 @@
 ﻿@model List<Loan_Procedure.DTOs.Loan.LoanResponseDto>
+@using Loan_Procedure.Utils.Constants;
 
 @{
     ViewData["Title"] = "Loans";
@@ -62,15 +63,15 @@ else
                     <td>@loan.StatusText</td>
                     <td>@loan.CreatedDate.ToString("yyyy-MM-dd")</td>
                     <td class="text-center">
-                        @if (loan.Status == 0 || loan.Status == 1)
+                        @if (loan.Status == (byte)LoanStatus.Draft || loan.Status == (byte)LoanStatus.Submitted)
                         {
                             <a asp-action="Edit" asp-route-id="@loan.LoanId" class="btn btn-sm btn-warning">Update</a>
                         }
-                        @if (loan.Status == 0)
+                        @if (loan.Status == (byte)LoanStatus.Draft)
                         {
                             <a asp-action="Submit" asp-route-id="@loan.LoanId" class="btn btn-sm btn-primary">Submit</a>
                         }
-                        @if (loan.Status == 1)
+                        @if (loan.Status == (byte)LoanStatus.Submitted)
                         {
                             <a asp-action="Approve" asp-route-id="@loan.LoanId" class="btn btn-sm btn-success">Approve</a>
                             <a asp-action="Reject" asp-route-id="@loan.LoanId" class="btn btn-sm btn-danger">Reject</a>

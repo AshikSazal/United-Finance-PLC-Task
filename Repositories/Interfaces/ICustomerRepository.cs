@@ -9,6 +9,6 @@ namespace Loan_Procedure.Repositories.Interfaces
         Response AddCustomer(Customer customer);
         List<CustomerResponseDto> GetCustomers();
         Response UpdateCustomer(Customer customer);
-        Customer GetCustomer(int Id);
+        Customer? GetCustomer(int Id);
     }
 }

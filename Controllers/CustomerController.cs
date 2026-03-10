@@ -42,20 +42,28 @@ namespace Loan_Procedure.Controllers
                 return RedirectToAction("Index");
             }
 
-            // error - add single message
             ModelState.AddModelError(string.Empty, response.Message);
-            // Add a fallback return to ensure all code paths return a value
             return View(customer);
         }
-        // Show edit form
         public IActionResult Edit(int id)
         {
-            var customer = _service.GetCustomer(id);
+            try
+            {
+                var customer = _service.GetCustomer(id);
 
-            if (customer == null)
-                return View(null);
+                if (customer == null)
+                {
+                    ModelState.AddModelError("", "Customer not found.");
+                    return View(new Customer());
+                }
 
-            return View(customer);
+                return View(customer);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(new Customer());
+            }
         }
 
         // Handle POST from form
@@ -66,14 +74,13 @@ namespace Loan_Procedure.Controllers
             if (!ModelState.IsValid)
                 return View(customer);
 
-            Response response = _service.UpdateCustomer(customer); // implement in service & repo
+            Response response = _service.UpdateCustomer(customer);
             if (response.Status)
             {
                 TempData["Message"] = response.Message;
                 return RedirectToAction("Index");
             }
 
-            // error - add single message
             ModelState.AddModelError(string.Empty, response.Message);
             return RedirectToAction("Index");
         }

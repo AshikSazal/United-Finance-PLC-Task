@@ -7,9 +7,9 @@
 <h2>Add Customer</h2>
 
 <!-- Top-right toast for service/repository errors -->
-@if (ViewData.ModelState[string.Empty]?.Errors.Count > 0)
+@if (ViewData.ModelState != null && ViewData.ModelState[string.Empty]?.Errors.Count > 0)
 {
-    var errorMessage = ViewData.ModelState[string.Empty].Errors.First().ErrorMessage;
+    var errorMessage = ViewData.ModelState[string.Empty]?.Errors.First().ErrorMessage;
     <div class="position-fixed top-0 end-0 p-3" style="z-index:1080;">
         <div class="toast align-items-center text-bg-danger border-0" role="alert">
             <div class="d-flex">

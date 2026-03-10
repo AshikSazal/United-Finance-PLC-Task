@@ -6,10 +6,9 @@
 
 <h2>Edit Customer</h2>
 
-<!-- Top-right toast for repository/service errors -->
 @if (ViewData.ModelState[string.Empty]?.Errors.Count > 0)
 {
-    var errorMessage = ViewData.ModelState[string.Empty].Errors.First().ErrorMessage;
+    var errorMessage = ViewData.ModelState[string.Empty]?.Errors.First().ErrorMessage;
     <div class="position-fixed top-0 end-0 p-3" style="z-index:1080;">
         <div class="toast align-items-center text-bg-danger border-0" role="alert">
             <div class="d-flex">
@@ -59,7 +58,7 @@
     </div>
 
     <div class="col-12 mt-2">
-        <button type="submit" class="btn btn-success">Update</button>
+        <button type="submit" @(ViewData.ModelState.IsValid ? "" : "disabled") class="btn btn-success">Update</button>
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     </div>
 </form>

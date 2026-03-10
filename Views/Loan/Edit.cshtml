@@ -79,7 +79,7 @@
     </div>
 
     <div class="col-12 mt-2">
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" @(ViewData.ModelState.IsValid ? "" : "disabled") class="btn btn-success">Update</button>
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     </div>
 </form>

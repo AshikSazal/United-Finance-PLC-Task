@@ -12,7 +12,7 @@ namespace Loan_Procedure.Models
         public int? CustomerId { get; set; }
 
         [Required(ErrorMessage = "Loan amount is required")]
-        [Range(1, 1000000000, ErrorMessage = "Amount must be greater than 0")]
+        [Range(1, double.MaxValue, ErrorMessage = "Amount must be greater than 0")]
         [Column(TypeName = "decimal(18,2)")]
         public decimal? Amount { get; set; }
 

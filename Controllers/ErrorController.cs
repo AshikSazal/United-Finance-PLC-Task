@@ -9,10 +9,10 @@ namespace Loan_Procedure.Controllers
         {
             if (statusCode == 404)
             {
-                return View("NotFound"); // create NotFound.cshtml
+                return View("NotFound");
             }
 
-            return View("Error"); // your generic Error.cshtml
+            return View("Error");
         }
     }
 }

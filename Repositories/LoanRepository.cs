@@ -4,6 +4,7 @@ using Loan_Procedure.DTOs.Loan;
 using Loan_Procedure.Models;
 using Loan_Procedure.Repositories.Interfaces;
 using Loan_Procedure.Utils;
+using Loan_Procedure.Utils.Constants;
 using Microsoft.Data.SqlClient;
 
 namespace Loan_Procedure.Repositories
@@ -101,7 +102,7 @@ namespace Loan_Procedure.Repositories
 
                 string query = @"UPDATE Loans
                     SET CustomerId=@CustomerId, Amount=@Amount, LoanType=@LoanType, Tenor=@Tenor, Purpose=@Purpose
-                    WHERE LoanId=@LoanId AND Status <= 1";
+                    WHERE LoanId=@LoanId AND Status <= @SubmittedStatus";
 
                 using SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@CustomerId", loan.CustomerId);
@@ -110,6 +111,7 @@ namespace Loan_Procedure.Repositories
                 cmd.Parameters.AddWithValue("@Tenor", loan.Tenor);
                 cmd.Parameters.AddWithValue("@Purpose", loan.Purpose);
                 cmd.Parameters.AddWithValue("@LoanId", loan.LoanId);
+                cmd.Parameters.AddWithValue("@SubmittedStatus", (byte)LoanStatus.Submitted);
 
                 con.Open();
                 int rowsAffected = cmd.ExecuteNonQuery();
@@ -121,7 +123,7 @@ namespace Loan_Procedure.Repositories
             }
             catch (Exception ex)
             {
-                return new Response { Status = false, Message = $"Error updating loan: {ex.Message}" };
+                return Response.Fail($"Error updating loan: {ex.Message}");
             }
         }
         public Response UpdateStatus(int loanId, int status)

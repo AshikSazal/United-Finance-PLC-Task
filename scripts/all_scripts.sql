@@ -23,5 +23,6 @@ CREATE TABLE Loans(
     Status TINYINT NOT NULL DEFAULT 0,
     CreatedDate DATETIME DEFAULT GETDATE(),
     CONSTRAINT CHK_Loan_Status CHECK (Status IN (0,1,2,3)),
+    CONSTRAINT FK_Loans_Customers FOREIGN KEY (CustomerId) REFERENCES Customers(CustomerId)
 );
 GO

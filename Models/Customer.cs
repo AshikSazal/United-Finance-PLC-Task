@@ -20,7 +20,7 @@ namespace Loan_Procedure.Models
         public string? Mobile { get; set; }
 
         [Required(ErrorMessage = "Income is required")]
-        [Range(1, 100000000, ErrorMessage = "Income must be greater than 0")]
+        [Range(1, double.MaxValue, ErrorMessage = "Income must be greater than 0")]
         public decimal? Income { get; set; }
     }
 }

@@ -45,11 +45,11 @@ namespace Loan_Procedure.Repositories
             }
         }
 
-        public PagedResult<LoanResponseDto> GetLoans(int? status, int? customerId, int page = 1, int pageSize = 10)
+        public PagedResponse<LoanResponseDto> GetLoans(int? status, int? customerId, int page = 1, int pageSize = 10)
         {
             try
             {
-                var result = new PagedResult<LoanResponseDto>();
+                var result = new PagedResponse<LoanResponseDto>();
 
                 using var con = _dbConnection.CreateConnection();
                 string query = @"

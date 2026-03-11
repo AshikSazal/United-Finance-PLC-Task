@@ -21,7 +21,7 @@ namespace Loan_Procedure.Services
                 return Response.Fail("Loan amount must be greater than zero.");
             return _loanRepository.CreateLoan(loan);
         }
-        public PagedResult<LoanResponseDto> GetLoans(int? status, int? customerId, int page = 1, int pageSize = 10)
+        public PagedResponse<LoanResponseDto> GetLoans(int? status, int? customerId, int page = 1, int pageSize = 10)
         {
             return _loanRepository.GetLoans(status, customerId, page, pageSize);
         }

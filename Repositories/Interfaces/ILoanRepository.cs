@@ -8,7 +8,7 @@ namespace Loan_Procedure.Repositories.Interfaces
     public interface ILoanRepository
     {
         Response CreateLoan(Loan loan);
-        PagedResult<LoanResponseDto> GetLoans(int? status, int? customerId, int page = 1, int pageSize = 10);
+        PagedResponse<LoanResponseDto> GetLoans(int? status, int? customerId, int page = 1, int pageSize = 10);
         Response UpdateLoan(Loan loan);
         Response UpdateStatus(int loanId, int status);
         Loan? GetLoan(int id);

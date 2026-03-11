@@ -78,9 +78,9 @@ namespace Loan_Procedure.Repositories
             return list;
         }
 
-        public PagedResult<CustomerResponseDto> GetCustomers(int page = 1, int pageSize = 10)
+        public PagedResponse<CustomerResponseDto> GetCustomers(int page = 1, int pageSize = 10)
         {
-            var result = new PagedResult<CustomerResponseDto>();
+            var result = new PagedResponse<CustomerResponseDto>();
 
             try
             {

@@ -20,7 +20,7 @@ namespace Loan_Procedure.Controllers
         // GET: /Customer
         public IActionResult Index(int page = 1, int pageSize = 5)
         {
-            PagedResult<CustomerResponseDto> customers = _service.GetCustomers(page, pageSize);
+            PagedResponse<CustomerResponseDto> customers = _service.GetCustomers(page, pageSize);
             ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalRecords = customers.TotalRecords;

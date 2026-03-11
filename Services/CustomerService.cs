@@ -26,7 +26,7 @@ namespace Loan_Procedure.Services
         {
             return _customerRepository.GetCustomers();
         }
-        public PagedResult<CustomerResponseDto> GetCustomers(int page = 1, int pageSize = 10)
+        public PagedResponse<CustomerResponseDto> GetCustomers(int page = 1, int pageSize = 10)
         {
             return _customerRepository.GetCustomers(page, pageSize);
         }

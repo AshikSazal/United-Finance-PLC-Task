@@ -9,7 +9,7 @@ namespace Loan_Procedure.Repositories.Interfaces
     {
         Response AddCustomer(Customer customer);
         List<CustomerResponseDto> GetCustomers();
-        PagedResult<CustomerResponseDto> GetCustomers(int page = 1, int pageSize = 10);
+        PagedResponse<CustomerResponseDto> GetCustomers(int page = 1, int pageSize = 10);
         Response UpdateCustomer(Customer customer);
         Customer? GetCustomer(int Id);
     }

@@ -220,4 +220,4 @@ Views           → Razor UI pages
 
 # Author
 
-Candidate Assignment – Mini Loan Approval System
+Assignment – Mini Loan Approval System

@@ -220,4 +220,4 @@ Views           → Razor UI pages
 
 # Author
 
-Assignment – Mini Loan Approval System
+United Finance PLC – Mini Loan Approval System

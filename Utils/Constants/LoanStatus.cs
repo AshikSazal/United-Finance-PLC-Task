@@ -13,7 +13,6 @@ namespace Loan_Procedure.Utils.Constants
     {
         public static readonly List<SelectListItem> Status = new()
         {
-            new() { Value = "", Text = "-- All Status --" },
             new() { Value = ((byte)LoanStatus.Draft).ToString(), Text = "Draft" },
             new() { Value = ((byte)LoanStatus.Submitted).ToString(), Text = "Submitted" },
             new() { Value = ((byte)LoanStatus.Approved).ToString(), Text = "Approved" },

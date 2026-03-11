@@ -5,7 +5,6 @@ using Loan_Procedure.Models;
 using Loan_Procedure.Repositories.Interfaces;
 using Loan_Procedure.Utils;
 using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Loan_Procedure.Repositories
 {
@@ -53,14 +52,14 @@ namespace Loan_Procedure.Repositories
 
                 using var con = _dbConnection.CreateConnection();
                 string query = @"
-        SELECT COUNT(*) OVER() AS TotalRecords, l.*, c.Name AS CustomerName
-        FROM Loans l
-        INNER JOIN Customers c ON l.CustomerId = c.CustomerId
-        WHERE (@Status IS NULL OR l.Status = @Status)
-        AND (@CustomerId IS NULL OR l.CustomerId = @CustomerId)
-        ORDER BY l.CreatedDate DESC
-        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
-    ";
+                    SELECT COUNT(*) OVER() AS TotalRecords, l.*, c.Name AS CustomerName
+                    FROM Loans l
+                    INNER JOIN Customers c ON l.CustomerId = c.CustomerId
+                    WHERE (@Status IS NULL OR l.Status = @Status)
+                    AND (@CustomerId IS NULL OR l.CustomerId = @CustomerId)
+                    ORDER BY l.CreatedDate DESC
+                    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+                ";
 
                 using var cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@Status", status ?? (object)DBNull.Value);
@@ -73,7 +72,7 @@ namespace Loan_Procedure.Repositories
 
                 while (reader.Read())
                 {
-                    result.TotalRecords = Convert.ToInt32(reader["TotalRecords"]); // same for all rows
+                    result.TotalRecords = Convert.ToInt32(reader["TotalRecords"]);
                     result.Items.Add(new LoanResponseDto
                     {
                         LoanId = Convert.ToInt32(reader["LoanId"]),
@@ -101,13 +100,8 @@ namespace Loan_Procedure.Repositories
                 using var con = _dbConnection.CreateConnection();
 
                 string query = @"UPDATE Loans
-                             SET CustomerId=@CustomerId,
-                                 Amount=@Amount,
-                                 LoanType=@LoanType,
-                                 Tenor=@Tenor,
-                                 Purpose=@Purpose
-                             WHERE LoanId=@LoanId
-                             AND Status <= 1";
+                    SET CustomerId=@CustomerId, Amount=@Amount, LoanType=@LoanType, Tenor=@Tenor, Purpose=@Purpose
+                    WHERE LoanId=@LoanId AND Status <= 1";
 
                 using SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@CustomerId", loan.CustomerId);
@@ -152,7 +146,7 @@ namespace Loan_Procedure.Repositories
                 return Response.Fail("Something Went Wrong!!!");
             }
         }
-        public Loan GetLoan(int id)
+        public Loan? GetLoan(int id)
         {
             try
             {

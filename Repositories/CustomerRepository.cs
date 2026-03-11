@@ -41,7 +41,6 @@ namespace Loan_Procedure.Repositories
                 {
                     return Response.Fail("NID can't be duplicate");
                 }
-                // You can log the exception here if needed
                 return Response.Fail("Something Went Wrong!!!");
             }
         }
@@ -88,11 +87,11 @@ namespace Loan_Procedure.Repositories
                 using var con = _dbConnection.CreateConnection();
 
                 string query = @"
-            SELECT COUNT(*) OVER() AS TotalRecords, *
-            FROM Customers
-            ORDER BY Name
-            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
-        ";
+                    SELECT COUNT(*) OVER() AS TotalRecords, *
+                    FROM Customers
+                    ORDER BY Name
+                    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+                ";
 
                 using SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@Offset", (page - 1) * pageSize);
@@ -130,11 +129,8 @@ namespace Loan_Procedure.Repositories
                 using var con = _dbConnection.CreateConnection();
 
                 string query = @"UPDATE Customers
-                         SET Name=@Name,
-                             NID=@NID,
-                             Mobile=@Mobile,
-                             Income=@Income
-                         WHERE CustomerId=@CustomerId";
+                    SET Name=@Name, NID=@NID, Mobile=@Mobile, Income=@Income
+                    WHERE CustomerId=@CustomerId";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@Name", customer.Name);
